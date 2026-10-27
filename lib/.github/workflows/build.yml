@@ -1,0 +1,36 @@
+name: Build APK Kasir 3D
+
+on:
+  workflow_dispatch: # Agar bisa diklik manual kapan saja
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ambil Kode
+        uses: actions/checkout@v4
+
+      - name: Siapkan Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Siapkan Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+
+      - name: Buat Struktur Android Lengkap
+        run: flutter create --platforms=android .
+
+      - name: Compile Menjadi APK
+        run: flutter build apk --release
+
+      - name: Upload File APK Jadi
+        uses: actions/upload-artifact@v4
+        with:
+          name: Kasir3D-Aplikasi
+          path: build/app/outputs/flutter-apk/app-release.apk
